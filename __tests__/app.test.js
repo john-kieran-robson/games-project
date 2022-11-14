@@ -38,6 +38,7 @@ describe("GET /api/reviews", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.reviews).toBeInstanceOf(Array);
+        expect(body.categories.length > 0).toBe(true);
         body.reviews.forEach((review) => {
           expect(review).toMatchObject({
             owner: expect.any(String),
