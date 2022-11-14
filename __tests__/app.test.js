@@ -38,7 +38,8 @@ describe("GET /api/reviews", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.reviews).toBeInstanceOf(Array);
-        expect(body.categories.length > 0).toBe(true);
+        expect(body.reviews.length > 0).toBe(true);
+        expect(body.reviews).toBeSorted("created_at");
         body.reviews.forEach((review) => {
           expect(review).toMatchObject({
             owner: expect.any(String),
@@ -52,17 +53,6 @@ describe("GET /api/reviews", () => {
             comment_count: expect.any(Number),
           });
         });
-      });
-  });
-});
-
-describe("Name of the group", () => {
-  test("status 404: no route found, GET", () => {
-    return supertest(app)
-      .get("/nope")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("Route does not exist");
       });
   });
 });

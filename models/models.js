@@ -17,8 +17,7 @@ exports.selectReviews = () => {
     .query(
       `SELECT reviews.*, CAST(COUNT(reviews.review_id) AS int) AS comment_count
   FROM reviews
-  JOIN users ON reviews.owner = users.username
-  JOIN comments ON reviews.review_id = comments.review_id
+  LEFT JOIN comments ON reviews.review_id = comments.review_id
   GROUP BY reviews.review_id
   ORDER BY created_at DESC;`
     )
