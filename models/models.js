@@ -15,12 +15,12 @@ exports.selectCategories = () => {
 exports.selectReviews = () => {
   return db
     .query(
-      `SELECT reviews.*, COUNT(review_id) AS comment_count
+      `SELECT reviews.*, CAST(COUNT(reviews.review_id) AS int) AS comment_count
   FROM reviews
   JOIN users ON reviews.owner = users.username
-  JOIN comments ON review.review_id = comments.review_id
-  ORDER BY created_at DESC
-  GROUP BY reviews.review_id;`
+  JOIN comments ON reviews.review_id = comments.review_id
+  GROUP BY reviews.review_id
+  ORDER BY created_at DESC;`
     )
     .then((result) => {
       if (result.rows.length === 0) {
