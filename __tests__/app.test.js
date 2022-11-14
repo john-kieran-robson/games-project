@@ -20,23 +20,13 @@ describe("GET /api/categories", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.categories).toBeInstanceOf(Array);
+        expect(body.categories.length > 0).toBe(true);
         body.categories.forEach((catagory) => {
           expect(catagory).toMatchObject({
             slug: expect.any(String),
             description: expect.any(String),
           });
         });
-      });
-  });
-});
-
-describe("Name of the group", () => {
-  test("status 404: no route found, GET", () => {
-    return supertest(app)
-      .get("/nope")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("Route does not exist");
       });
   });
 });
