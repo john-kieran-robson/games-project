@@ -12,21 +12,6 @@ exports.selectCategories = () => {
   });
 };
 
-exports.selectReviewByReviewId = (reviewId) => {
-  return db
-    .query(` SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
-    .then((result) => {
-      const review = result.rows[0];
-      if (!review) {
-        return Promise.reject({
-          status: 404,
-          msg: `no review found with review_id`,
-        });
-      }
-      return review;
-    });
-};
-
 exports.selectReviews = () => {
   return db
     .query(
@@ -41,5 +26,20 @@ exports.selectReviews = () => {
         return Promise.reject({ status: 400, msg: `No reviews` });
       }
       return result.rows;
+    });
+};
+
+exports.selectReviewByReviewId = (reviewId) => {
+  return db
+    .query(` SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
+    .then((result) => {
+      const review = result.rows[0];
+      if (!review) {
+        return Promise.reject({
+          status: 404,
+          msg: `no review found with review_id`,
+        });
+      }
+      return review;
     });
 };
