@@ -83,7 +83,7 @@ describe("GET /api/reviews/:review_id ", () => {
       .get("/api/reviews/30")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("no review found with review_id");
+        expect(response.body.msg).toBe("invalid ID");
       });
   });
 
@@ -92,7 +92,7 @@ describe("GET /api/reviews/:review_id ", () => {
       .get("/api/reviews/hiiii")
       .expect(400)
       .then((response) => {
-        expect(response.body.msg).toBe("Bad Request");
+        expect(response.body.msg).toBe("bad request");
       });
   });
 });
@@ -113,7 +113,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
             created_at: expect.any(String),
             author: expect.any(String),
             body: expect.any(String),
-            review_id: expect.any(Number),
+            review_id: 3,
           });
         });
       });
@@ -132,7 +132,16 @@ describe("GET /api/reviews/:review_id/comments", () => {
       .get("/api/reviews/HIIIII/comments")
       .expect(400)
       .then((response) => {
-        expect(response.body.msg).toBe("Bad Request");
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("status 404: review id not found", () => {
+    return supertest(app)
+      .get("/api/reviews/300/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("invalid ID");
       });
   });
 });
