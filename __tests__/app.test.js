@@ -12,7 +12,6 @@ afterAll(() => {
   if (db.end) db.end();
 });
 
-// will separate
 describe("GET /api/categories", () => {
   test("status 200 should return array of catagories objects", () => {
     return supertest(app)
@@ -26,6 +25,29 @@ describe("GET /api/categories", () => {
             slug: expect.any(String),
             description: expect.any(String),
           });
+        });
+      });
+  });
+});
+
+describe("GET /api/reviews/:review_id ", () => {
+  test("status 200 should return review object", () => {
+    return supertest(app)
+      .get("/api/reviews/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.review).toBeInstanceOf(Object);
+        console.log(body.review);
+        expect(body.review).toMatchObject({
+          review_id: expect.any(Number),
+          title: expect.any(String),
+          review_body: expect.any(String),
+          designer: expect.any(String),
+          review_img_url: expect.any(String),
+          votes: expect.any(Number),
+          category: expect.any(String),
+          owner: expect.any(String),
+          created_at: expect.any(String),
         });
       });
   });
