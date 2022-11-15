@@ -3,6 +3,7 @@ const data = require("../db/data/test-data/index");
 const { app } = require("../app");
 const db = require("../db/connection.js");
 const supertest = require("supertest");
+const { response } = require("express");
 
 beforeEach(() => {
   return seed(data);
@@ -89,6 +90,46 @@ describe("GET /api/reviews/:review_id ", () => {
   test("status 400 bad request", () => {
     return supertest(app)
       .get("/api/reviews/hiiii")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+});
+
+describe("GET /api/reviews/:review_id/comments", () => {
+  test("status 200  return array of comments for given review_id", () => {
+    return supertest(app)
+      .get("/api/reviews/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toBeInstanceOf(Array);
+        expect(body.comments.length > 0).toBe(true);
+        expect(body.comments).toBeSortedBy("created_at", { descending: true });
+        body.comments.forEach((review) => {
+          expect(review).toMatchObject({
+            comment_id: expect.any(Number),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+            author: expect.any(String),
+            body: expect.any(String),
+            review_id: expect.any(Number),
+          });
+        });
+      });
+  });
+  test("status code 200 No comments found", () => {
+    return supertest(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments).toEqual([]);
+      });
+  });
+
+  test("status 400: invalid ID ", () => {
+    return supertest(app)
+      .get("/api/reviews/HIIIII/comments")
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Bad Request");
