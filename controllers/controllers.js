@@ -49,11 +49,14 @@ exports.getCommentsByReviewId = (req, res, next) => {
 };
 
 exports.postCommentsByReviewId = (req, res, next) => {
-  return insertCommentsByReviewId(req.params.review_id, req.body)
+  const commentInfo = req.body;
+  const reviewId = req.params[0];
+  return insertCommentsByReviewId(reviewId, commentInfo)
     .then((comment) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err, "HELLO");
+      next(err);
     });
 };
