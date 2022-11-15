@@ -36,9 +36,22 @@ exports.selectReviewByReviewId = (reviewId) => {
       if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
-          msg: `no review found with review_id`,
+          msg: `invalid ID`,
         });
       }
       return result.rows[0];
     });
+};
+
+exports.selectCommentsByReviewId = (reviewId) => {
+  return this.selectReviewByReviewId(reviewId)
+    .then(() => {
+      return db.query(
+        `SELECT * FROM comments
+  WHERE review_id = $1
+  ORDER BY created_at DESC;`,
+        [reviewId]
+      );
+    })
+    .then((result) => result.rows);
 };
