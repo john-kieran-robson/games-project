@@ -28,3 +28,17 @@ exports.selectReviews = () => {
       return result.rows;
     });
 };
+
+exports.selectReviewByReviewId = (reviewId) => {
+  return db
+    .query(` SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
+    .then((result) => {
+      if (result.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: `no review found with review_id`,
+        });
+      }
+      return result.rows[0];
+    });
+};
