@@ -58,11 +58,17 @@ exports.selectCommentsByReviewId = (reviewId) => {
 
 exports.insertCommentsByReviewId = (reviewId, comment) => {
   const currentTime = new Date();
-  return db.query(
-    `INSERT INTO comments
+  return db
+    .query(
+      `INSERT INTO comments
   (body, votes, author, review_id, created_at)
   VALUES
-  ($1,0,$2,$3,$4)`,
-    [comment.body, comment.username, reviewId, currentTime]
-  );
+  ($1,0,$2,$3,$4)
+  RETURNING *`,
+      [comment.body, comment.username, reviewId, currentTime]
+    )
+    .then((response) => {
+      console.log(response);
+      return response.rows[0];
+    });
 };
