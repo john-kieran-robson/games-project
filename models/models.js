@@ -33,13 +33,12 @@ exports.selectReviewByReviewId = (reviewId) => {
   return db
     .query(` SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
     .then((result) => {
-      const review = result.rows[0];
-      if (!review) {
+      if (result.rows.length === 0) {
         return Promise.reject({
           status: 404,
           msg: `no review found with review_id`,
         });
       }
-      return review;
+      return result.rows[0];
     });
 };
