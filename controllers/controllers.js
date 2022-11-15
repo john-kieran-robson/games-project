@@ -9,3 +9,8 @@ exports.getCategories = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getReviewByReviewId = (req, res, next) => {
+    return selectReviewByReviewId()
+    .then(())
+}
