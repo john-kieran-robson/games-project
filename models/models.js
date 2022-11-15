@@ -23,10 +23,7 @@ exports.selectReviews = () => {
     )
     .then((result) => {
       if (result.rows.length === 0) {
-        throw {
-          status: 400,
-          msg: `No reviews`,
-        };
+        return Promise.reject({ status: 400, msg: `No reviews` });
       }
       return result.rows;
     });
