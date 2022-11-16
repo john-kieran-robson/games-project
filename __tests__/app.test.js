@@ -169,28 +169,41 @@ describe("POST /api/reviews/:review_id/comments ", () => {
   test("Status 400: malformed body / missing required fields ", () => {
     const newComment = {
       username: "mallionaire",
-      // body: "Hello this is the comment that kieran created",
     };
     return supertest(app)
       .post("/api/reviews/1/comments")
       .send(newComment)
       .expect(400)
       .then((response) => {
-        expect(response.body.msg).toBe("Invalid comment created");
+        expect(response.body.msg).toBe("bad request");
       });
   });
 
-  // test("status 400: bad request", () => {
-  //   const newComment = {
-  //     username: "mallionaire",
-  //     body: "Hello this is the comment that kieran created",
-  //   };
-  //   return supertest(app)
-  //     .post("/api/reviews/1/comments")
-  //     .send(newComment)
-  //     .expect(400)
-  //     .then((response) => {
-  //       expect(response.body.msg).toBe("Bad Request");
-  //     });
-  // });
+  test("status 404: invalid id", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "ehl",
+    };
+    return supertest(app)
+      .post("/api/reviews/73/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("invalid ID");
+      });
+  });
+
+  test("status 400: user does not exist", () => {
+    const newComment = {
+      username: "hghsdfghsdlfjghlsdfkjgh",
+      body: "hello",
+    };
+    return supertest(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
 });

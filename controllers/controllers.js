@@ -50,13 +50,13 @@ exports.getCommentsByReviewId = (req, res, next) => {
 
 exports.postCommentsByReviewId = (req, res, next) => {
   const commentInfo = req.body;
-  const reviewId = req.params[0];
+  const reviewId = req.params.review_id;
   return insertCommentsByReviewId(reviewId, commentInfo)
     .then((comment) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log(err, "HELLO");
+      console.log(err);
       next(err);
     });
 };
