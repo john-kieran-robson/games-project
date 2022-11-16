@@ -291,3 +291,14 @@ describe("PATCH /api/reviews/:review_id", () => {
       });
   });
 });
+
+describe("GET /api/users", () => {
+  test("STATUS 200: returns array of user objects", () => {
+    return supertest(app)
+      .get(" /api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user).toBeInstanceOf(Array);
+      });
+  });
+});
