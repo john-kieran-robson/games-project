@@ -5,6 +5,7 @@ const {
   selectCommentsByReviewId,
   insertCommentsByReviewId,
   updateReviewByReviewId,
+  selectUsers,
 } = require("../models/models.js");
 
 exports.getCategories = (req, res, next) => {
@@ -66,6 +67,16 @@ exports.patchReviewByReviewId = (req, res, next) => {
   return updateReviewByReviewId(reviewId, req.body)
     .then((review) => {
       res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.getUsers = (req, res, next) => {
+  return selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
     })
     .catch((err) => {
       next(err);

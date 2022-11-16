@@ -4,6 +4,7 @@ const { app } = require("../app");
 const db = require("../db/connection.js");
 const supertest = require("supertest");
 const { response } = require("express");
+const { string } = require("pg-format");
 
 beforeEach(() => {
   return seed(data);
@@ -74,6 +75,7 @@ describe("GET /api/reviews/:review_id ", () => {
           category: expect.any(String),
           owner: expect.any(String),
           created_at: expect.any(String),
+          comment_count: expect.any(Number),
         });
       });
   });
@@ -288,6 +290,25 @@ describe("PATCH /api/reviews/:review_id", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("invalid ID");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("STATUS 200: returns array of user objects", () => {
+    return supertest(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toBeInstanceOf(Array);
+        expect(body.users.length > 0).toBe(true);
+        body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
