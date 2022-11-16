@@ -162,6 +162,7 @@ describe("POST /api/reviews/:review_id/comments ", () => {
           author: newComment.username,
           review_id: 1,
           created_at: expect.any(String),
+          body: newComment.body,
         });
       });
   });
@@ -200,6 +201,20 @@ describe("POST /api/reviews/:review_id/comments ", () => {
     };
     return supertest(app)
       .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Does not exist");
+      });
+  });
+
+  test("status 400: invalid ID type", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "hello",
+    };
+    return supertest(app)
+      .post("/api/reviews/hello/comments")
       .send(newComment)
       .expect(400)
       .then((response) => {
