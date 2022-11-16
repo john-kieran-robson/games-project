@@ -162,6 +162,7 @@ describe("POST /api/reviews/:review_id/comments ", () => {
           author: newComment.username,
           review_id: 1,
           created_at: expect.any(String),
+          body: newComment.body,
         });
       });
   });
@@ -200,6 +201,20 @@ describe("POST /api/reviews/:review_id/comments ", () => {
     };
     return supertest(app)
       .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Does not exist");
+      });
+  });
+
+  test("status 400: invalid ID type", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "hello",
+    };
+    return supertest(app)
+      .post("/api/reviews/hello/comments")
       .send(newComment)
       .expect(400)
       .then((response) => {
@@ -254,7 +269,7 @@ describe("PATCH /api/reviews/:review_id", () => {
       });
   });
 
-  test("Status 400: invalid  ", () => {
+  test("Status 400: invalid id type", () => {
     const newVotes = { inc_votes: 5 };
     return supertest(app)
       .patch("/api/reviews/heelo")
@@ -262,6 +277,17 @@ describe("PATCH /api/reviews/:review_id", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("Status 404: id not found ", () => {
+    const newVotes = { inc_votes: 5 };
+    return supertest(app)
+      .patch("/api/reviews/300")
+      .send(newVotes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("invalid ID");
       });
   });
 });
