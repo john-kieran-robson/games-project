@@ -33,9 +33,33 @@ describe("GET /api/categories", () => {
 });
 
 describe("GET /api/reviews", () => {
-  test("status 200 should return array of review objects", () => {
+  test.only("status 200 should return array of review objects", () => {
     return supertest(app)
       .get("/api/reviews")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeInstanceOf(Array);
+        expect(body.reviews.length > 0).toBe(true);
+        expect(body.reviews).toBeSortedBy("created_at", { descending: true });
+        body.reviews.forEach((review) => {
+          expect(review).toMatchObject({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: expect.any(Number),
+            category: expect.any(String),
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            designer: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+
+  test.only("status 200: test query catagory", () => {
+    return supertest(app)
+      .get("/api/reviews?sort_by=title&category=dexterity")
       .expect(200)
       .then(({ body }) => {
         expect(body.reviews).toBeInstanceOf(Array);
