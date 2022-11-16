@@ -73,3 +73,19 @@ exports.insertCommentsByReviewId = (reviewId, comment) => {
       return response.rows[0];
     });
 };
+
+exports.updateReviewByReviewId = (reviewId, requestBody) => {
+  return this.selectReviewByReviewId(reviewId)
+    .then(() => {
+      return db.query(
+        `UPDATE reviews
+  SET votes = votes + $1
+  WHERE review_id = $2
+  RETURNING *;`,
+        [requestBody.inc_votes, reviewId]
+      );
+    })
+    .then((response) => {
+      return response.rows[0];
+    });
+};
