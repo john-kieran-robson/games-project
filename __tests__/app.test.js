@@ -4,6 +4,7 @@ const { app } = require("../app");
 const db = require("../db/connection.js");
 const supertest = require("supertest");
 const { response } = require("express");
+const { string } = require("pg-format");
 
 beforeEach(() => {
   return seed(data);
@@ -219,6 +220,94 @@ describe("POST /api/reviews/:review_id/comments ", () => {
       .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("bad request");
+      });
+  });
+});
+
+describe("PATCH /api/reviews/:review_id", () => {
+  test("status 200: update votes on review", () => {
+    const patchReview = {
+      inc_votes: 5,
+    };
+    return supertest(app)
+      .patch("/api/reviews/1")
+      .send(patchReview)
+      .expect(200)
+      .then((response) => {
+        expect(response.body.review).toMatchObject({
+          title: "Agricola",
+          designer: "Uwe Rosenberg",
+          owner: "mallionaire",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          review_body: "Farmyard fun!",
+          category: "euro game",
+          created_at: "2021-01-18T10:00:20.514Z",
+          votes: 6,
+        });
+      });
+  });
+
+  test("Status 400: malformed body / missing required fields ", () => {
+    const newVotes = {};
+    return supertest(app)
+      .patch("/api/reviews/1")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("Status 400: incorrect type updated ", () => {
+    const newVotes = { inc_votes: "HI" };
+    return supertest(app)
+      .patch("/api/reviews/1")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("Status 400: invalid id type", () => {
+    const newVotes = { inc_votes: 5 };
+    return supertest(app)
+      .patch("/api/reviews/heelo")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("Status 404: id not found ", () => {
+    const newVotes = { inc_votes: 5 };
+    return supertest(app)
+      .patch("/api/reviews/300")
+      .send(newVotes)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("invalid ID");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("STATUS 200: returns array of user objects", () => {
+    return supertest(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toBeInstanceOf(Array);
+        expect(body.users.length > 0).toBe(true);
+        body.users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
