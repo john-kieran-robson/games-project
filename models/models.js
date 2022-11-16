@@ -55,3 +55,21 @@ exports.selectCommentsByReviewId = (reviewId) => {
     })
     .then((result) => result.rows);
 };
+
+exports.insertCommentsByReviewId = (reviewId, comment) => {
+  const currentTime = new Date();
+  return this.selectReviewByReviewId(reviewId)
+    .then(() => {
+      return db.query(
+        `INSERT INTO comments
+  (body, votes, author, review_id, created_at)
+  VALUES
+  ($1,0,$2,$3,$4)
+  RETURNING *;`,
+        [comment.body, comment.username, reviewId, currentTime]
+      );
+    })
+    .then((response) => {
+      return response.rows[0];
+    });
+};

@@ -145,3 +145,80 @@ describe("GET /api/reviews/:review_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/reviews/:review_id/comments ", () => {
+  test("status 201: Post new comment", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "Hello this is the comment that kieran created",
+    };
+    return supertest(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((response) => {
+        expect(response.body.comment).toMatchObject({
+          votes: 0,
+          author: newComment.username,
+          review_id: 1,
+          created_at: expect.any(String),
+          body: newComment.body,
+        });
+      });
+  });
+
+  test("Status 400: malformed body / missing required fields ", () => {
+    const newComment = {
+      username: "mallionaire",
+    };
+    return supertest(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("status 404: invalid id", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "ehl",
+    };
+    return supertest(app)
+      .post("/api/reviews/73/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("invalid ID");
+      });
+  });
+
+  test("status 400: user does not exist", () => {
+    const newComment = {
+      username: "hghsdfghsdlfjghlsdfkjgh",
+      body: "hello",
+    };
+    return supertest(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Does not exist");
+      });
+  });
+
+  test("status 400: invalid ID type", () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "hello",
+    };
+    return supertest(app)
+      .post("/api/reviews/hello/comments")
+      .send(newComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+});
