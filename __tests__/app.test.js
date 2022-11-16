@@ -231,4 +231,37 @@ describe("PATCH /api/reviews/:review_id", () => {
         });
       });
   });
+
+  test("Status 400: malformed body / missing required fields ", () => {
+    const newVotes = {};
+    return supertest(app)
+      .patch("/api/reviews/1")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("Status 400: incorrect type updated ", () => {
+    const newVotes = { inc_votes: "HI" };
+    return supertest(app)
+      .patch("/api/reviews/1")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+
+  test("Status 400: invalid  ", () => {
+    const newVotes = { inc_votes: 5 };
+    return supertest(app)
+      .patch("/api/reviews/heelo")
+      .send(newVotes)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
 });
