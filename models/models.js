@@ -92,12 +92,6 @@ exports.updateReviewByReviewId = (reviewId, requestBody) => {
 
 exports.selectUsers = () => {
   return db.query("SELECT * FROM users").then((result) => {
-    if (result.rows.length === 0) {
-      throw {
-        status: 400,
-        msg: `No users`,
-      };
-    }
     return result.rows;
   });
 };
