@@ -59,18 +59,20 @@ describe("GET /api/reviews", () => {
 
   test("status 200: test query catagory", () => {
     return supertest(app)
-      .get("/api/reviews?sort_by=title&category=dexterity")
+      .get("/api/reviews?sort_by=title&category=social deduction")
       .expect(200)
       .then(({ body }) => {
         expect(body.reviews).toBeInstanceOf(Array);
         expect(body.reviews.length > 0).toBe(true);
-        expect(body.reviews).toBeSortedBy("created_at", { descending: true });
+        expect(body.reviews).toBeSortedBy("title", {
+          descending: true,
+        });
         body.reviews.forEach((review) => {
           expect(review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),
             review_id: expect.any(Number),
-            category: "dexterity",
+            category: "social deduction",
             review_img_url: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
@@ -83,18 +85,18 @@ describe("GET /api/reviews", () => {
 
   test("status 200: FULL TEST QUERIES", () => {
     return supertest(app)
-      .get("/api/reviews?order=DESC&sort_by=title&category=dexterity")
+      .get("/api/reviews?order=DESC&sort_by=title&category=social deduction")
       .expect(200)
       .then(({ body }) => {
         expect(body.reviews).toBeInstanceOf(Array);
         expect(body.reviews.length > 0).toBe(true);
-        expect(body.reviews).toBeSortedBy("review_id", { descending: true });
+        expect(body.reviews).toBeSortedBy("title", { descending: true });
         body.reviews.forEach((review) => {
           expect(review).toMatchObject({
             owner: expect.any(String),
             title: expect.any(String),
             review_id: expect.any(Number),
-            category: "dexterity",
+            category: "social deduction",
             review_img_url: expect.any(String),
             created_at: expect.any(String),
             votes: expect.any(Number),
