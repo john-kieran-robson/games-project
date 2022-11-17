@@ -56,6 +56,74 @@ describe("GET /api/reviews", () => {
         });
       });
   });
+
+  test("status 200: test query catagory", () => {
+    return supertest(app)
+      .get("/api/reviews?sort_by=title&category=social deduction")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeInstanceOf(Array);
+        expect(body.reviews.length > 0).toBe(true);
+        expect(body.reviews).toBeSortedBy("title", {
+          descending: true,
+        });
+        body.reviews.forEach((review) => {
+          expect(review).toMatchObject({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: expect.any(Number),
+            category: "social deduction",
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            designer: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+
+  test("status 200: FULL TEST QUERIES", () => {
+    return supertest(app)
+      .get("/api/reviews?order=DESC&sort_by=title&category=social deduction")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.reviews).toBeInstanceOf(Array);
+        expect(body.reviews.length > 0).toBe(true);
+        expect(body.reviews).toBeSortedBy("title", { descending: true });
+        body.reviews.forEach((review) => {
+          expect(review).toMatchObject({
+            owner: expect.any(String),
+            title: expect.any(String),
+            review_id: expect.any(Number),
+            category: "social deduction",
+            review_img_url: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            designer: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+
+  test("status 404: test error handle colum not exist", () => {
+    return supertest(app)
+      .get("/api/reviews?sort_by=bob&category=dexterity")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Does not exist");
+      });
+  });
+
+  test("status 404: test error handle order not exist", () => {
+    return supertest(app)
+      .get("/api/reviews?order=&category=dexterity")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Does not exist");
+      });
+  });
 });
 
 describe("GET /api/reviews/:review_id ", () => {
@@ -75,6 +143,7 @@ describe("GET /api/reviews/:review_id ", () => {
           category: expect.any(String),
           owner: expect.any(String),
           created_at: expect.any(String),
+          comment_count: 0,
         });
       });
   });
