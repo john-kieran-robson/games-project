@@ -107,21 +107,30 @@ describe("GET /api/reviews", () => {
       });
   });
 
-  test("status 404: test error handle colum not exist", () => {
+  test("status 400: test error handle colum not exist", () => {
     return supertest(app)
       .get("/api/reviews?sort_by=bob&category=dexterity")
-      .expect(404)
+      .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Does not exist");
       });
   });
 
-  test("status 404: test error handle order not exist", () => {
+  test("status 400: test error handle order not exist", () => {
     return supertest(app)
       .get("/api/reviews?order=&category=dexterity")
-      .expect(404)
+      .expect(400)
       .then((response) => {
         expect(response.body.msg).toBe("Does not exist");
+      });
+  });
+
+  test("status 400: test error handle category doens't exist", () => {
+    return supertest(app)
+      .get("/api/reviews?category=bob")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("No reviews");
       });
   });
 });
