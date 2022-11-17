@@ -28,7 +28,7 @@ exports.selectReviews = (category, sort_by = "created_at", order = "DESC") => {
     "votes",
   ];
   if (!orderOption.includes(order) || !columnArray.includes(sort_by)) {
-    return Promise.reject({ status: 404, msg: `Does not exist` });
+    return Promise.reject({ status: 400, msg: `Does not exist` });
   }
   if (category) {
     categoryString = `WHERE category = $1`;
