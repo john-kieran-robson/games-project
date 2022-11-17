@@ -31,7 +31,14 @@ exports.selectReviews = () => {
 
 exports.selectReviewByReviewId = (reviewId) => {
   return db
-    .query(` SELECT * FROM reviews WHERE review_id = $1;`, [reviewId])
+    .query(
+      ` SELECT reviews.*, CAST(COUNT(comments.review_id)AS int) AS comment_count
+    FROM reviews 
+    FULL OUTER JOIN comments ON reviews.review_id = comments.review_id 
+    WHERE reviews.review_id = $1
+    GROUP BY reviews.review_id;`,
+      [reviewId]
+    )
     .then((result) => {
       if (result.rows.length === 0) {
         return Promise.reject({
