@@ -89,3 +89,9 @@ exports.updateReviewByReviewId = (reviewId, requestBody) => {
       return response.rows[0];
     });
 };
+
+exports.selectUsers = () => {
+  return db.query("SELECT * FROM users").then((result) => {
+    return result.rows;
+  });
+};
