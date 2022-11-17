@@ -21,7 +21,6 @@ app.patch("/api/reviews/:review_id", patchReviewByReviewId);
 app.get("/api/users", getUsers);
 
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
@@ -33,6 +32,8 @@ app.use((err, req, res, next) => {
   } else if (err.code === "23502") {
     res.status(400).send({ msg: "bad request" });
   } else if (err.code === "23503") {
+    res.status(404).send({ msg: "Does not exist" });
+  } else if (err.code === "42703") {
     res.status(404).send({ msg: "Does not exist" });
   } else {
     next(err);

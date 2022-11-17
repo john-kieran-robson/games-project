@@ -14,11 +14,26 @@ exports.selectCategories = () => {
 
 exports.selectReviews = (category, sort_by = "created_at", order = "DESC") => {
   let categoryString = "";
-  console.log(category);
-  if (category) {
-    categoryString = `WHERE category = '${category}'`;
+  let categoryArray = [];
+  const orderOption = ["ASC", "DESC"];
+  const columnArray = [
+    "review_id",
+    "title",
+    "category",
+    "designer",
+    "owner",
+    "review_body",
+    "review_img_url",
+    "created_at",
+    "votes",
+  ];
+  if (!orderOption.includes(order) || !columnArray.includes(sort_by)) {
+    return Promise.reject({ status: 404, msg: `Does not exist` });
   }
-  console.log(categoryString);
+  if (category) {
+    categoryString = `WHERE category = $1`;
+    categoryArray.push(category);
+  }
   return db
     .query(
       `SELECT reviews.*, CAST(COUNT(reviews.review_id) AS int) AS comment_count
@@ -26,7 +41,8 @@ exports.selectReviews = (category, sort_by = "created_at", order = "DESC") => {
   LEFT JOIN comments ON reviews.review_id = comments.review_id
   ${categoryString}
   GROUP BY reviews.review_id
-  ORDER BY ${sort_by} ${order};`
+  ORDER BY ${sort_by} ${order};`,
+      categoryArray
     )
     .then((result) => {
       if (result.rows.length === 0) {
@@ -106,12 +122,6 @@ exports.updateReviewByReviewId = (reviewId, requestBody) => {
 
 exports.selectUsers = () => {
   return db.query("SELECT * FROM users").then((result) => {
-    if (result.rows.length === 0) {
-      throw {
-        status: 400,
-        msg: `No users`,
-      };
-    }
     return result.rows;
   });
 };
