@@ -95,3 +95,20 @@ exports.selectUsers = () => {
     return result.rows;
   });
 };
+
+exports.removeCommentById = (commentId) => {
+  return db
+    .query(
+      `DELETE FROM comments
+  WHERE comment_id = $1;`,
+      [commentId]
+    )
+    .then((response) => {
+      if (response.rowCount === 0) {
+        throw {
+          status: 404,
+          msg: `comment does not exist`,
+        };
+      }
+    });
+};
