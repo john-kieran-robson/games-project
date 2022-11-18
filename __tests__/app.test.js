@@ -413,3 +413,15 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("GET api", () => {
+  test("should return json object", () => {
+    const endpoints = require("../endpoints.json");
+    return supertest(app)
+      .get("/api")
+      .then((response) => {
+        expect(response.body).toBeInstanceOf(Object);
+        expect(response.body).toMatchObject(endpoints);
+      });
+  });
+});

@@ -30,5 +30,122 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "Description": "Returns review using its review_id",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "review_id": 1,
+        "title": "Agricola",
+        "category": "euro game",
+        "designer": "Uwe Rosenberg",
+        "owner": "mallionaire",
+        "review_body": "Farmyard fun!",
+        "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        "created_at": "2021-01-18T10:00:20.514Z",
+        "votes": 1
+      }
+    }
+  },
+
+  "GET /api/reviews/:review_id/comments": {
+    "Description": "Returns comments of certain review_id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 6,
+          "body": "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+          "review_id": 3,
+          "author": "philippaclaire9",
+          "votes": 10,
+          "created_at": "2021-03-27T19:49:48.110Z"
+        },
+        {
+          "comment_id": 3,
+          "body": "I didn't know dogs could play games",
+          "review_id": 3,
+          "author": "philippaclaire9",
+          "votes": 10,
+          "created_at": "2021-01-18T10:09:48.110Z"
+        },
+        {
+          "comment_id": 2,
+          "body": "My dog loved this game too!",
+          "review_id": 3,
+          "author": "mallionaire",
+          "votes": 13,
+          "created_at": "2021-01-18T10:09:05.410Z"
+        }
+      ]
+    }
+  },
+
+  "PATCH /api/reviews/:review_id": {
+    "Description": "increases or decreases votes of comments using review ID",
+    "queries": [],
+    "exampleBody": {
+      "inc_votes": 3
+    },
+    "exampleResponse": {
+      "review": {
+        "review_id": 1,
+        "title": "Agricola",
+        "category": "euro game",
+        "designer": "Uwe Rosenberg",
+        "owner": "mallionaire",
+        "review_body": "Farmyard fun!",
+        "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        "created_at": "2021-01-18T10:00:20.514Z",
+        "votes": 6
+      }
+    }
+  },
+
+  "POST /api/reviews/:review_id/comments": {
+    "Description": "post comment with review ID",
+    "queries": [],
+    "exampleBody": {
+      "username": "kieran",
+      "body": "hello this is a test"
+    },
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 7,
+        "body": "Hello this is the comment that kieran created",
+        "review_id": 1,
+        "author": "mallionaire",
+        "votes": 0,
+        "created_at": "2022-11-17T15:02:41.116Z"
+      }
+    }
+  },
+
+  "GET /api/users": {
+    "Description": "returns array of objects ",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "username": "mallionaire",
+        "name": "haz",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      },
+      {
+        "username": "philippaclaire9",
+        "name": "philippa",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
+      },
+      {
+        "username": "bainesface",
+        "name": "sarah",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+      },
+      {
+        "username": "dav3rid",
+        "name": "dave",
+        "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+      }
+    ]
   }
 }
