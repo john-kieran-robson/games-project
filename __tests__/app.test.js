@@ -389,3 +389,27 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("STATUS 204: Should delete relavent comment by comment id", () => {
+    return supertest(app).delete("/api/comments/1").expect(204);
+  });
+
+  test("DELETE - 404: cannot delete undefined comment ID", () => {
+    return supertest(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("comment does not exist");
+      });
+  });
+
+  test("DELETE - 400: non-number comment IDs return an error", () => {
+    return supertest(app)
+      .delete("/api/comments/someComment")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+});
