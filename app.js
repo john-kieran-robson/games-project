@@ -7,6 +7,8 @@ const {
   postCommentsByReviewId,
   patchReviewByReviewId,
   getUsers,
+  deleteCommentByCommentId,
+  getApi,
 } = require("./controllers/controllers");
 
 const app = express();
@@ -19,6 +21,8 @@ app.get("/api/reviews/:review_id", getReviewByReviewId);
 app.post("/api/reviews/:review_id/comments", postCommentsByReviewId);
 app.patch("/api/reviews/:review_id", patchReviewByReviewId);
 app.get("/api/users", getUsers);
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
+app.get("/api", getApi);
 
 app.use((err, req, res, next) => {
   if (err.status && err.msg) {
