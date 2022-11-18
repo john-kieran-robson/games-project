@@ -85,6 +85,9 @@
   "PATCH /api/reviews/:review_id": {
     "Description": "increases or decreases votes of comments using review ID",
     "queries": [],
+    "exampleBody": {
+      "inc_votes": 3
+    },
     "exampleResponse": {
       "review": {
         "review_id": 1,
@@ -103,6 +106,10 @@
   "POST /api/reviews/:review_id/comments": {
     "Description": "post comment with review ID",
     "queries": [],
+    "exampleBody": {
+      "username": "kieran",
+      "body": "hello this is a test"
+    },
     "exampleResponse": {
       "comment": {
         "comment_id": 7,

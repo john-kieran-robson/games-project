@@ -20,7 +20,6 @@ describe("GET /api/categories", () => {
       .get("/api/categories")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.categories);
         expect(body.categories).toBeInstanceOf(Array);
         expect(body.categories.length > 0).toBe(true);
         body.categories.forEach((catagory) => {
@@ -60,12 +59,11 @@ describe("GET /api/reviews", () => {
 });
 
 describe("GET /api/reviews/:review_id ", () => {
-  test.only("status 200 should return review object", () => {
+  test("status 200 should return review object", () => {
     return supertest(app)
       .get("/api/reviews/1")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.review).toBeInstanceOf(Object);
         expect(body.review).toMatchObject({
           review_id: 1,
@@ -101,12 +99,11 @@ describe("GET /api/reviews/:review_id ", () => {
 });
 
 describe("GET /api/reviews/:review_id/comments", () => {
-  test.only("status 200  return array of comments for given review_id", () => {
+  test("status 200  return array of comments for given review_id", () => {
     return supertest(app)
       .get("/api/reviews/3/comments")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.comments).toBeInstanceOf(Array);
         expect(body.comments.length > 0).toBe(true);
         expect(body.comments).toBeSortedBy("created_at", { descending: true });
@@ -151,7 +148,7 @@ describe("GET /api/reviews/:review_id/comments", () => {
 });
 
 describe("POST /api/reviews/:review_id/comments ", () => {
-  test.only("status 201: Post new comment", () => {
+  test("status 201: Post new comment", () => {
     const newComment = {
       username: "mallionaire",
       body: "Hello this is the comment that kieran created",
@@ -161,7 +158,6 @@ describe("POST /api/reviews/:review_id/comments ", () => {
       .send(newComment)
       .expect(201)
       .then((response) => {
-        console.log(response.body, "POST");
         expect(response.body.comment).toMatchObject({
           votes: 0,
           author: newComment.username,
@@ -229,7 +225,7 @@ describe("POST /api/reviews/:review_id/comments ", () => {
 });
 
 describe("PATCH /api/reviews/:review_id", () => {
-  test.only("status 200: update votes on review", () => {
+  test("status 200: update votes on review", () => {
     const patchReview = {
       inc_votes: 5,
     };
@@ -238,7 +234,6 @@ describe("PATCH /api/reviews/:review_id", () => {
       .send(patchReview)
       .expect(200)
       .then((response) => {
-        console.log(response.body);
         expect(response.body.review).toMatchObject({
           title: "Agricola",
           designer: "Uwe Rosenberg",
@@ -299,12 +294,11 @@ describe("PATCH /api/reviews/:review_id", () => {
 });
 
 describe("GET /api/users", () => {
-  test.only("STATUS 200: returns array of user objects", () => {
+  test("STATUS 200: returns array of user objects", () => {
     return supertest(app)
       .get("/api/users")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.users);
         expect(body.users).toBeInstanceOf(Array);
         expect(body.users.length > 0).toBe(true);
         body.users.forEach((user) => {
@@ -344,10 +338,12 @@ describe("DELETE /api/comments/:comment_id", () => {
 
 describe("GET api", () => {
   test("should return json object", () => {
+    const endpoints = require("../endpoints.json");
     return supertest(app)
       .get("/api")
       .then((response) => {
-        expect(response).toBeInstanceOf(Object);
+        expect(response.body).toBeInstanceOf(Object);
+        expect(response.body).toMatchObject(endpoints);
       });
   });
 });
