@@ -90,7 +90,7 @@ exports.deleteCommentByCommentId = (req, res, next) => {
   const commentId = req.params.comment_id;
   return removeCommentById(commentId)
     .then(() => {
-      res.status(204).send();
+      res.sendStatus(204);
     })
     .catch((err) => next(err));
 };
